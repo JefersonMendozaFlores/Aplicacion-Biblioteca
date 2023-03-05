@@ -1,0 +1,128 @@
+package gui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JInternalFrame;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.SwingConstants;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import entidad.Alumno;
+import model.AlumnoModel;
+
+import java.awt.event.ActionListener;
+import java.util.List;
+import java.awt.event.ActionEvent;
+
+public class FrmConsultaAlumno extends JInternalFrame implements ActionListener {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextField txtNombres;
+	private JTextField txtApellidos;
+	private JTable table;
+	private JButton BtnBuscar;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FrmConsultaAlumno frame = new FrmConsultaAlumno();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public FrmConsultaAlumno() {
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setTitle("Consulta de Alumno");
+		setMaximizable(true);
+		setIconifiable(true);
+		setClosable(true);
+		setBounds(100, 100, 1003, 630);
+		getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("CONSULTAR ALUMNO POR NOMBRE Y APELLIDO");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel.setBounds(10, 11, 469, 38);
+		getContentPane().add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("Nombres:");
+		lblNewLabel_1.setBounds(10, 57, 79, 14);
+		getContentPane().add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Apellidos:");
+		lblNewLabel_2.setBounds(10, 94, 84, 14);
+		getContentPane().add(lblNewLabel_2);
+		
+		txtNombres = new JTextField();
+		txtNombres.setBounds(77, 54, 145, 20);
+		getContentPane().add(txtNombres);
+		txtNombres.setColumns(10);
+		
+		txtApellidos = new JTextField();
+		txtApellidos.setBounds(77, 91, 145, 20);
+		getContentPane().add(txtApellidos);
+		txtApellidos.setColumns(10);
+		
+		BtnBuscar = new JButton("Buscar");
+		BtnBuscar.addActionListener(this);
+		BtnBuscar.setBounds(888, 90, 89, 23);
+		getContentPane().add(BtnBuscar);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 274, 967, 315);
+		getContentPane().add(scrollPane);
+		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"ID", "Nombres", "Apellidos", "DNI", "Pais", "Correo", "Fecha de Nacimiento", "Fecha de Registro"
+			}
+		));
+		
+		scrollPane.setViewportView(table);
+
+	}
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == BtnBuscar) {
+			actionPerformedBtnBuscarJButton(e);
+		}
+	}
+	protected void actionPerformedBtnBuscarJButton(ActionEvent e) {
+		String nombre = txtNombres.getText();
+		String apellido = txtApellidos.getText();
+		
+		AlumnoModel model = new AlumnoModel();
+		List<Alumno> lstAlumno = model.ConsultaPorNombreApellido(nombre, apellido);
+		
+		DefaultTableModel dtm = (DefaultTableModel) table.getModel();
+		dtm.setRowCount(0);
+		
+		Object[] fila = null; 
+		for (Alumno x : lstAlumno) {
+			fila = new Object[] {x.getID(),x.getNombres() , x.getApellidos(), x.getDni(), x.getPais(), x.getCorreo(), x.getFec_Nac(), x.getFec_Reg()};
+			dtm.addRow(fila);
+		}
+	}
+}

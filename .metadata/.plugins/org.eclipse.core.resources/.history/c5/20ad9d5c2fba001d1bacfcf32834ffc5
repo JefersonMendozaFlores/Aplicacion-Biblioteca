@@ -1,0 +1,178 @@
+package gui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JInternalFrame;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+
+import entidad.Libro;
+import model.LibroModel;
+import util.Validaciones;
+
+import java.awt.Font;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class FrmRegistroLibro extends JInternalFrame implements ActionListener {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextField txtTitulo;
+	private JTextField txtSerie;
+	private JComboBox<String> cboCategoria;
+	private JComboBox<String> cboPais;
+	private JComboBox<String> cboTipo;
+	private JTextField txtAño;
+	private JButton btnRegistrar;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FrmRegistroLibro frame = new FrmRegistroLibro();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public FrmRegistroLibro() {
+		setTitle("Registro de Libro");
+		setMaximizable(true);
+		setIconifiable(true);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setClosable(true);
+		setBounds(100, 100, 443, 302);
+		getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Registro de Libro");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(79, 11, 283, 25);
+		getContentPane().add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("Titulo:");
+		lblNewLabel_1.setBounds(10, 52, 46, 14);
+		getContentPane().add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("A\u00F1o:");
+		lblNewLabel_2.setBounds(10, 80, 46, 14);
+		getContentPane().add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("Categoria:");
+		lblNewLabel_3.setBounds(10, 140, 74, 14);
+		getContentPane().add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("Serie:");
+		lblNewLabel_4.setBounds(10, 108, 46, 14);
+		getContentPane().add(lblNewLabel_4);
+		
+		JLabel lblNewLabel_6 = new JLabel("Pais:");
+		lblNewLabel_6.setBounds(10, 175, 46, 14);
+		getContentPane().add(lblNewLabel_6);
+		
+		JLabel lblNewLabel_7 = new JLabel("Tipo:");
+		lblNewLabel_7.setBounds(10, 204, 46, 14);
+		getContentPane().add(lblNewLabel_7);
+		
+		txtTitulo = new JTextField();
+		txtTitulo.setBounds(65, 49, 187, 20);
+		getContentPane().add(txtTitulo);
+		txtTitulo.setColumns(10);
+		
+		cboCategoria = new JComboBox<String>();
+		cboCategoria.setModel(new DefaultComboBoxModel<String>(new String[] {"[Seleccione]", "Estrategia", "Novela", "Terror", "Comedia", "Suspenso", "Aventura"}));
+		cboCategoria.setBounds(79, 136, 138, 22);
+		getContentPane().add(cboCategoria);
+		
+		cboPais = new JComboBox<String>();
+		cboPais.setModel(new DefaultComboBoxModel<String>(new String[] {"[Seleccione]", "Peru", "Colombia", "Venezuela", "Brazil", "Ecuador", "Chile", "Argentina", "Bolivia"}));
+		cboPais.setBounds(79, 167, 138, 22);
+		getContentPane().add(cboPais);
+		
+		cboTipo = new JComboBox<String>();
+		cboTipo.setModel(new DefaultComboBoxModel<String>(new String[] {"[Seleccione]", "Fisico", "Digital"}));
+		cboTipo.setBounds(79, 196, 138, 22);
+		getContentPane().add(cboTipo);
+		
+		txtSerie = new JTextField();
+		txtSerie.setBounds(66, 105, 186, 20);
+		getContentPane().add(txtSerie);
+		txtSerie.setColumns(10);
+		
+		btnRegistrar = new JButton("Registrar");
+		btnRegistrar.addActionListener(this);
+		btnRegistrar.setBounds(295, 104, 89, 23);
+		getContentPane().add(btnRegistrar);
+		
+		txtAño = new JTextField();
+		txtAño.setBounds(66, 77, 186, 20);
+		getContentPane().add(txtAño);
+		txtAño.setColumns(10);
+
+	}
+	
+	public void mensaje(String ms) {
+		JOptionPane.showMessageDialog(this, ms);
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnRegistrar) {
+			actionPerformedBtnRegistrarJButton(e);
+		}
+	}
+	protected void actionPerformedBtnRegistrarJButton(ActionEvent e) {
+		String titu = txtTitulo.getText();
+		String año = txtAño.getText();
+		String categ = cboCategoria.getSelectedItem().toString();
+		String serie = txtSerie.getText();
+		String pais = cboPais.getSelectedItem().toString();
+		String tipo = cboTipo.getSelectedItem().toString();
+		if (!titu.matches(Validaciones.TEXTO)) {
+			mensaje("El Titulo es de 2 o mas caracteres");
+		} else if (!año.matches(Validaciones.ANNO)) {
+			mensaje("El Año es de 4 Caracteres");
+		} else if (cboCategoria.getSelectedIndex() == 0) {
+			mensaje("Seleccione Categoria");
+		} else if (cboPais.getSelectedIndex() == 0) {
+			mensaje("Seleccione Pais");
+		} else if (cboTipo.getSelectedIndex() == 0) {
+			mensaje("Seleccione Tipo");
+		} else {
+			Libro obj = new Libro();
+			obj.setTituto(titu);
+			obj.setAño(Integer.parseInt(año));
+			obj.setCategoria(categ);
+			obj.setSerie(serie);
+			obj.setPais(pais);
+			obj.setTipo(tipo);
+			
+			LibroModel model = new LibroModel();
+			int salida = model.insertaLibro(obj);
+			
+			if (salida > 0) {
+				mensaje("Se registro correctamente. Felicitaciones :)");
+			}else {
+				mensaje("No se registro correctamente :(");
+			}
+			
+		}
+	}
+}

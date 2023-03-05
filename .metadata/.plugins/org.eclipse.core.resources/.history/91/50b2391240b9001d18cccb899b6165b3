@@ -1,0 +1,126 @@
+package gui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JInternalFrame;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.SwingConstants;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
+
+import entidad.Alumno;
+import model.AlumnoModel;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.swing.JRViewer;
+import util.GeneradorReporte;
+
+import java.awt.Color;
+import javax.swing.border.EtchedBorder;
+import java.awt.event.ActionListener;
+import java.util.List;
+import java.awt.event.ActionEvent;
+
+public class FrmReporteAlumno extends JInternalFrame implements ActionListener {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextField txtNombres;
+	private JTextField txtApellidos;
+	private JButton btnFiltrar;
+	private JPanel panel;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FrmReporteAlumno frame = new FrmReporteAlumno();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public FrmReporteAlumno() {
+		setTitle("Reporte de Alumno");
+		setMaximizable(true);
+		setIconifiable(true);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setClosable(true);
+		setBounds(100, 100, 1050, 705);
+		getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("REPORTE DE ALUMNO");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel.setBounds(350, 11, 276, 42);
+		getContentPane().add(lblNewLabel);
+		
+		txtNombres = new JTextField();
+		txtNombres.setBounds(113, 67, 160, 20);
+		getContentPane().add(txtNombres);
+		txtNombres.setColumns(10);
+		
+		JLabel lblNewLabel_1 = new JLabel("Nombres:");
+		lblNewLabel_1.setBounds(30, 70, 73, 14);
+		getContentPane().add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Apellidos:");
+		lblNewLabel_2.setBounds(299, 70, 73, 14);
+		getContentPane().add(lblNewLabel_2);
+		
+		txtApellidos = new JTextField();
+		txtApellidos.setBounds(392, 67, 133, 20);
+		getContentPane().add(txtApellidos);
+		txtApellidos.setColumns(10);
+		
+		btnFiltrar = new JButton("Filtrar");
+		btnFiltrar.addActionListener(this);
+		btnFiltrar.setBounds(609, 64, 89, 23);
+		getContentPane().add(btnFiltrar);
+		
+		panel = new JPanel();
+		panel.setBackground(Color.LIGHT_GRAY);
+		panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "REPORTES", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel.setBounds(30, 109, 994, 555);
+		getContentPane().add(panel);
+
+	}
+	
+	
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnFiltrar) {
+			actionPerformedBtnFiltrarJButton(e);
+		}
+	}
+	protected void actionPerformedBtnFiltrarJButton(ActionEvent e) {
+		String nombre = txtNombres.getText();
+		String apellido = txtApellidos.getText();
+		
+		AlumnoModel model = new AlumnoModel();
+		List<Alumno> lstAlumno = model.ConsultaPorNombreApellido(nombre, apellido);
+		
+		JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(lstAlumno);
+		String jasper = "reporteAlumno.jasper";	
+		JasperPrint print = GeneradorReporte.genera(jasper, dataSource, null);
+		JRViewer jasperViewer = new JRViewer(print);
+		panel.removeAll();
+		panel.add(jasperViewer);
+		panel.repaint();
+		panel.revalidate();
+	}
+}

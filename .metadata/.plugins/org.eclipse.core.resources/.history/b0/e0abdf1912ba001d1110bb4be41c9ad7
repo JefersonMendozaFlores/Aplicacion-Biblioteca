@@ -1,0 +1,128 @@
+package gui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JInternalFrame;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import java.awt.Font;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import entidad.Sala;
+import model.SalaModel;
+
+import java.awt.event.ActionListener;
+import java.util.List;
+import java.awt.event.ActionEvent;
+
+public class FrmConsultaSala extends JInternalFrame implements ActionListener {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextField txtNumero;
+	private JTextField txtSede;
+	private JTable table;
+	private JButton btnConsultar;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FrmConsultaSala frame = new FrmConsultaSala();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public FrmConsultaSala() {
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setMaximizable(true);
+		setIconifiable(true);
+		setClosable(true);
+		setTitle("Consulta de Sala");
+		setBounds(100, 100, 1050, 504);
+		getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Consulta de Sala");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(382, 11, 244, 35);
+		getContentPane().add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("Numero:");
+		lblNewLabel_1.setBounds(10, 55, 57, 14);
+		getContentPane().add(lblNewLabel_1);
+		
+		txtNumero = new JTextField();
+		txtNumero.setBounds(77, 52, 138, 20);
+		getContentPane().add(txtNumero);
+		txtNumero.setColumns(10);
+		
+		JLabel lblNewLabel_2 = new JLabel("Sede:");
+		lblNewLabel_2.setBounds(244, 57, 46, 14);
+		getContentPane().add(lblNewLabel_2);
+		
+		txtSede = new JTextField();
+		txtSede.setBounds(300, 52, 138, 20);
+		getContentPane().add(txtSede);
+		txtSede.setColumns(10);
+		
+		btnConsultar = new JButton("Consultar");
+		btnConsultar.addActionListener(this);
+		btnConsultar.setBounds(497, 51, 89, 23);
+		getContentPane().add(btnConsultar);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 78, 1014, 385);
+		getContentPane().add(scrollPane);
+		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"ID", "Numero", "Piso", "Numero de Alumnos", "Recursos", "Estado", "Fecha de Registro", "Sede"
+			}
+		));
+		scrollPane.setViewportView(table);
+
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnConsultar) {
+			actionPerformedBtnConsultarJButton(e);
+		}
+	}
+	protected void actionPerformedBtnConsultarJButton(ActionEvent e) {
+		String numero = txtNumero.getText();
+		String sede = txtSede.getText();
+		
+		SalaModel model = new SalaModel();
+		List<Sala> lstSala = model.ConsultaPorNumeroSede(numero, sede);
+		
+		DefaultTableModel dtm = (DefaultTableModel) table.getModel();
+		dtm.setRowCount(0);
+		
+		Object[] fila = null; 
+		for (Sala x : lstSala) {
+			fila = new Object[] {x.getID(),x.getNumero(), x.getPiso() , x.getNumAlumnos(), x.getRecursos(), x.getEstado(), x.getFec_reg(), x.getSede()};
+			dtm.addRow(fila);
+		}
+	}
+}

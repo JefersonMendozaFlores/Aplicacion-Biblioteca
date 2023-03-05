@@ -1,0 +1,127 @@
+package gui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JInternalFrame;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.SwingConstants;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import entidad.Libro;
+import model.LibroModel;
+
+import java.awt.event.ActionListener;
+import java.util.List;
+import java.awt.event.ActionEvent;
+
+public class FrmConsultaLibro extends JInternalFrame implements ActionListener {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextField txtTitulo;
+	private JTextField txtCategoria;
+	private JTable table;
+	private JButton btnConsultar;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FrmConsultaLibro frame = new FrmConsultaLibro();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public FrmConsultaLibro() {
+		setTitle("Consulta de Libro");
+		setMaximizable(true);
+		setIconifiable(true);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setClosable(true);
+		setBounds(100, 100, 1050, 548);
+		getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Consulta de Libro");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel.setBounds(345, 11, 281, 37);
+		getContentPane().add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("Titulo:");
+		lblNewLabel_1.setBounds(10, 64, 61, 14);
+		getContentPane().add(lblNewLabel_1);
+		
+		txtTitulo = new JTextField();
+		txtTitulo.setBounds(60, 61, 193, 20);
+		getContentPane().add(txtTitulo);
+		txtTitulo.setColumns(10);
+		
+		JLabel lblNewLabel_2 = new JLabel("Categoria:");
+		lblNewLabel_2.setBounds(272, 64, 70, 14);
+		getContentPane().add(lblNewLabel_2);
+		
+		txtCategoria = new JTextField();
+		txtCategoria.setBounds(352, 61, 157, 20);
+		getContentPane().add(txtCategoria);
+		txtCategoria.setColumns(10);
+		
+		btnConsultar = new JButton("Consultar");
+		btnConsultar.addActionListener(this);
+		btnConsultar.setBounds(564, 60, 89, 23);
+		getContentPane().add(btnConsultar);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 89, 1014, 418);
+		getContentPane().add(scrollPane);
+		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"ID", "Titulo", "A\u00F1o", "Categoria", "Serie", "Fecha de Registro", "Pais", "Tipo"
+			}
+		));
+		scrollPane.setViewportView(table);
+
+	}
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnConsultar) {
+			actionPerformedBtnConsultarJButton(e);
+		}
+	}
+	protected void actionPerformedBtnConsultarJButton(ActionEvent e) {
+		String titulo = txtTitulo.getText();
+		String categoria = txtCategoria.getText();
+		
+		LibroModel model = new LibroModel();
+		List<Libro> lstLibro = model.ConsultaPorTituloCategoria(titulo, categoria);
+		
+		DefaultTableModel dtm = (DefaultTableModel) table.getModel();
+		dtm.setRowCount(0);
+		
+		Object[] fila = null; 
+		for (Libro x : lstLibro) {
+			fila = new Object[] {x.getID(),x.getTituto() , x.getAño(), x.getCategoria(), x.getSerie(), x.getFec_reg(), x.getPais(), x.getTipo()};
+			dtm.addRow(fila);
+		}
+	}	
+}

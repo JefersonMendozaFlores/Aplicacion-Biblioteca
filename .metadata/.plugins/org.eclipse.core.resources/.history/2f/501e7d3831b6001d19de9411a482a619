@@ -1,0 +1,363 @@
+package gui;
+
+import java.awt.EventQueue;
+import java.awt.Font;
+
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
+
+import entidad.Libro;
+import model.LibroModel;
+import util.Validaciones;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseListener;
+import java.util.List;
+import java.awt.event.MouseEvent;
+
+public class FrmMantenimientoLibro extends JInternalFrame implements ActionListener, MouseListener {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextField txtTitulo;
+	private JTextField txtSerie;
+	private JComboBox<String> cboCategoria;
+	private JComboBox<String> cboPais;
+	private JComboBox<String> cboTipo;
+	private JTable table;
+	private JTextField txtAño;
+	private JButton btnRegistrar;
+	private JButton btnActualizar;
+	private JButton btnEliminar;
+	
+	private int idSeleccionado = -1;
+
+	int hoveredRow = -1, hoveredColumn = -1;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FrmMantenimientoLibro frame = new FrmMantenimientoLibro();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public FrmMantenimientoLibro() {
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setMaximizable(true);
+		setIconifiable(true);
+		setClosable(true);
+		setTitle("Mantenimiento de Libro");
+		setBounds(100, 100, 1016, 495);
+		getContentPane().setLayout(null);
+
+		JLabel lblNewLabel = new JLabel("Mantenimiento de Libro");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(306, 6, 283, 37);
+		getContentPane().add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("Titulo:");
+		lblNewLabel_1.setBounds(10, 71, 46, 14);
+		getContentPane().add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("A\u00F1o:");
+		lblNewLabel_2.setBounds(10, 107, 46, 14);
+		getContentPane().add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("Categoria:");
+		lblNewLabel_3.setBounds(262, 107, 74, 14);
+		getContentPane().add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("Serie:");
+		lblNewLabel_4.setBounds(262, 71, 46, 14);
+		getContentPane().add(lblNewLabel_4);
+		
+		JLabel lblNewLabel_6 = new JLabel("Pais:");
+		lblNewLabel_6.setBounds(529, 107, 46, 14);
+		getContentPane().add(lblNewLabel_6);
+		
+		JLabel lblNewLabel_7 = new JLabel("Tipo:");
+		lblNewLabel_7.setBounds(529, 67, 46, 14);
+		getContentPane().add(lblNewLabel_7);
+		
+		txtTitulo = new JTextField();
+		txtTitulo.setBounds(65, 68, 124, 20);
+		getContentPane().add(txtTitulo);
+		txtTitulo.setColumns(10);
+		
+		cboCategoria = new JComboBox<String>();
+		cboCategoria.setModel(new DefaultComboBoxModel<String>(new String[] {"[Seleccione]", "Estrategia", "Novela", "Terror", "Comedia", "Suspenso", "Aventura"}));
+		cboCategoria.setBounds(346, 103, 139, 22);
+		getContentPane().add(cboCategoria);
+		
+		cboPais = new JComboBox<String>();
+		cboPais.setModel(new DefaultComboBoxModel<String>(new String[] {"[Seleccione]", "Peru", "Colombia", "Venezuela", "Brazil", "Ecuador", "Chile", "Argentina", "Bolivia"}));
+		cboPais.setBounds(585, 103, 139, 22);
+		getContentPane().add(cboPais);
+		
+		cboTipo = new JComboBox<String>();
+		cboTipo.setModel(new DefaultComboBoxModel<String>(new String[] {"[Seleccione]", "Fisico", "Digital"}));
+		cboTipo.setBounds(585, 63, 139, 22);
+		getContentPane().add(cboTipo);
+		
+		txtSerie = new JTextField();
+		txtSerie.setBounds(346, 68, 139, 20);
+		getContentPane().add(txtSerie);
+		txtSerie.setColumns(10);
+		
+		btnRegistrar = new JButton("Registrar");
+		btnRegistrar.addActionListener(this);
+		btnRegistrar.setBounds(901, 54, 89, 23);
+		getContentPane().add(btnRegistrar);
+		
+		btnActualizar = new JButton("Actualizar");
+		btnActualizar.addActionListener(this);
+		btnActualizar.setBounds(901, 86, 89, 23);
+		getContentPane().add(btnActualizar);
+		
+		btnEliminar = new JButton("Eliminar");
+		btnEliminar.addActionListener(this);
+		btnEliminar.setBounds(901, 122, 89, 23);
+		getContentPane().add(btnEliminar);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 155, 980, 299);
+		getContentPane().add(scrollPane);
+		
+		table = new JTable();
+		table.addMouseListener(this);
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"ID", "Titulo", "A\u00F1o", "Categoria", "Serie", "Pais", "Tipo"
+			}
+		));
+		scrollPane.setViewportView(table);
+		
+		txtAño = new JTextField();
+		txtAño.setBounds(66, 104, 123, 20);
+		getContentPane().add(txtAño);
+		txtAño.setColumns(10);
+		
+		listar();
+	}
+	
+	void mensaje(String m) {
+		JOptionPane.showMessageDialog(this, m);
+	}
+
+	void limpiarCajasTexto() {
+		txtTitulo.setText("");
+		txtAño.setText("");
+		cboCategoria.setSelectedItem("[seleccione]");
+		txtSerie.setText("");
+		cboPais.setSelectedItem("[seleccione]");
+		cboTipo.setSelectedItem("[seleccione]");
+		txtTitulo.requestFocus();
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnEliminar) {
+			actionPerformedBtnEliminarJButton(e);
+		}
+		if (e.getSource() == btnActualizar) {
+			actionPerformedBtnActualizarJButton(e);
+		}
+		if (e.getSource() == btnRegistrar) {
+			actionPerformedBtnRegistrarJButton(e);
+		}
+	}
+	protected void actionPerformedBtnRegistrarJButton(ActionEvent e) {
+		insertar();
+	}
+	protected void actionPerformedBtnActualizarJButton(ActionEvent e) {
+		actualizar();
+	}
+	protected void actionPerformedBtnEliminarJButton(ActionEvent e) {
+		eliminar();
+	}
+	
+	
+	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() == table) {
+			mouseClickedTableJTable(e);
+		}
+	}
+	public void mouseEntered(MouseEvent e) {
+	}
+	public void mouseExited(MouseEvent e) {
+	}
+	public void mousePressed(MouseEvent e) {
+	}
+	public void mouseReleased(MouseEvent e) {
+	}
+	protected void mouseClickedTableJTable(MouseEvent e) {
+		buscar();
+	}
+	
+	private void listar() {
+		LibroModel model = new LibroModel();
+		List<Libro> lista = model.listaTodos();
+
+		DefaultTableModel dtm = (DefaultTableModel) table.getModel();
+		dtm.setRowCount(0);
+
+		Object[] fila = null;
+		for (Libro x : lista) {
+			fila = new Object[] { x.getID(), x.getTituto(), x.getAño(), x.getCategoria(),
+					x.getSerie(), x.getPais(), x.getTipo() };
+			dtm.addRow(fila);
+		}
+	}
+
+	private void insertar() {
+		
+		String titu = txtTitulo.getText();
+		String anio = txtAño.getText();
+		String cate = cboCategoria.getSelectedItem().toString();
+		String seri = txtSerie.getText();
+		String pais = cboPais.getSelectedItem().toString();
+		String tipo = cboTipo.getSelectedItem().toString();
+		
+		if (!titu.matches(Validaciones.TEXTO)) {
+			mensaje("El Titulo es de 2 o mas caracteres");
+		} else if (!anio.matches(Validaciones.ANNO)) {
+			mensaje("El Año es de 4 Caracteres");
+		} else if (cboCategoria.getSelectedIndex() == 0) {
+			mensaje("Seleccione Categoria");
+		} else if (cboPais.getSelectedIndex() == 0) {
+			mensaje("Seleccione Pais");
+		} else if (cboTipo.getSelectedIndex() == 0) {
+			mensaje("Seleccione Tipo");
+		} else {
+			Libro obj = new Libro();
+			obj.setTituto(titu);
+			obj.setAño(Integer.parseInt(anio));
+			obj.setCategoria(cate);
+			obj.setSerie(seri);
+			obj.setPais(pais);
+			obj.setTipo(tipo);
+			LibroModel model = new LibroModel();
+			int salida = model.insertaLibro(obj);
+
+			if (salida > 0) {
+				listar();
+				limpiarCajasTexto();
+				idSeleccionado = -1;
+				mensaje("Se insertó correctamente");
+			} else {
+				mensaje("Error en el Registro");
+			}
+
+		}
+	}
+
+	private void buscar() {
+		int fila = table.getSelectedRow();
+
+		idSeleccionado = (Integer) table.getValueAt(fila, 0);
+		String titulo = (String) table.getValueAt(fila, 1);
+		Integer anio = (Integer) table.getValueAt(fila, 2);
+		String cate = (String)table.getValueAt(fila, 3);
+		String serie = (String) table.getValueAt(fila, 4);
+		String pais = (String)table.getValueAt(fila, 5);
+		String tipo = (String)table.getValueAt(fila, 6);
+		
+
+		System.out.println(idSeleccionado + " - " + titulo + " - " + anio+ " - " +cate +"-" + serie+ "-" + pais+ "-" +tipo);
+
+		txtTitulo.setText(titulo);
+		txtAño.setText(String.valueOf(anio));
+		cboCategoria.setSelectedItem(cate);
+		txtSerie.setText(serie);
+		cboPais.setSelectedItem(pais);
+		cboTipo.setSelectedItem(tipo);
+	}
+
+	private void eliminar() {
+		if (idSeleccionado == -1) {
+			mensaje("Seleccione una Fila");
+		} else {
+			LibroModel model = new LibroModel();
+			int salida = model.eliminaLibro(idSeleccionado);
+
+			if (salida > 0) {
+				listar();
+				idSeleccionado = -1;
+				limpiarCajasTexto();
+				mensaje("Se eliminó correctamente");
+			} else {
+				mensaje("Error en la eliminación");
+			}
+		}
+	}
+
+	private void actualizar() {
+		String titu = txtTitulo.getText();
+		String anio = txtAño.getText();
+		String cate = cboCategoria.getSelectedItem().toString();
+		String seri = txtSerie.getText();
+		String pais = cboPais.getSelectedItem().toString();
+		String tipo = cboTipo.getSelectedItem().toString();
+		
+		if (!titu.matches(Validaciones.TEXTO)) {
+			mensaje("El Título es de 2 o mas caracteres");
+		} else if (!anio.matches(Validaciones.ANNO)) {
+			mensaje("El Año es de 4 Caracteres");
+		} else if (cboCategoria.getSelectedIndex() == 0) {
+			mensaje("Seleccione Categoria");
+		} else if (cboPais.getSelectedIndex() == 0) {
+			mensaje("Seleccione Pais");
+		} else if (cboTipo.getSelectedIndex() == 0) {
+			mensaje("Seleccione Tipo");			
+		} else {
+			Libro obj = new Libro();
+			obj.setID(idSeleccionado);
+			obj.setTituto(titu);
+			obj.setAño(Integer.parseInt(anio));
+			obj.setCategoria(cate);
+			obj.setSerie(seri);
+			obj.setPais(pais);
+			obj.setTipo(tipo);
+			LibroModel model = new LibroModel();
+			int salida = model.actualizaLibro(obj);
+			
+			if (salida > 0) {
+				listar();
+				limpiarCajasTexto();
+				idSeleccionado = -1;
+				mensaje("Se actualizó correctamente");
+			} else {
+				mensaje("Error en la actualización");
+			}
+
+		}
+	}
+	
+}

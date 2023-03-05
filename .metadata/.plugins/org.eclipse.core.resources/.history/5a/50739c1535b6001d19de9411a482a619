@@ -1,0 +1,184 @@
+package gui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JInternalFrame;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+import java.awt.Font;
+
+import entidad.Sala;
+import model.SalaModel;
+import util.Validaciones;
+
+import javax.swing.JTextField;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class FrmRegistroSala extends JInternalFrame implements ActionListener {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextField txtNumero;
+	private JTextField txtRecursos;
+	private JButton btnRegistrar;
+	private JComboBox<String> cboSede;
+	private JTextField txtNumAlu;
+	private JTextField txtPiso;
+	private JCheckBox CheckEstado;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FrmRegistroSala frame = new FrmRegistroSala();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public FrmRegistroSala() {
+		setMaximizable(true);
+		setIconifiable(true);
+		setClosable(true);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setTitle("Registro de Sala");
+		setBounds(100, 100, 491, 338);
+		getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Registro de Sala");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(108, 11, 247, 34);
+		getContentPane().add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("Numero:");
+		lblNewLabel_1.setBounds(10, 59, 61, 14);
+		getContentPane().add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Piso:");
+		lblNewLabel_2.setBounds(10, 95, 61, 14);
+		getContentPane().add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("Numero de alumnos:");
+		lblNewLabel_3.setBounds(10, 129, 117, 14);
+		getContentPane().add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("Recursos:");
+		lblNewLabel_4.setBounds(10, 166, 77, 14);
+		getContentPane().add(lblNewLabel_4);
+		
+		JLabel lblNewLabel_6 = new JLabel("Sede:");
+		lblNewLabel_6.setBounds(10, 202, 61, 14);
+		getContentPane().add(lblNewLabel_6);
+		
+		txtNumero = new JTextField();
+		txtNumero.setBounds(74, 56, 241, 20);
+		getContentPane().add(txtNumero);
+		txtNumero.setColumns(10);
+		
+		txtRecursos = new JTextField();
+		txtRecursos.setBounds(81, 163, 234, 20);
+		getContentPane().add(txtRecursos);
+		txtRecursos.setColumns(10);
+		
+		cboSede = new JComboBox<String>();
+		cboSede.setModel(new DefaultComboBoxModel<String>(new String[] {"[Seleccione]", "Independencia", "Breña", "Mira Flores", "Bella Vista", "Chorrillos", "Los Olivos"}));
+		cboSede.setBounds(79, 198, 236, 22);
+		getContentPane().add(cboSede);
+		
+		CheckEstado = new JCheckBox(":Estado");
+		CheckEstado.setBounds(81, 242, 97, 23);
+		getContentPane().add(CheckEstado);
+		
+		btnRegistrar = new JButton("Registrar");
+		btnRegistrar.addActionListener(this);
+		btnRegistrar.setBounds(327, 125, 89, 23);
+		getContentPane().add(btnRegistrar);
+		
+		txtNumAlu = new JTextField();
+		txtNumAlu.setBounds(124, 126, 126, 20);
+		getContentPane().add(txtNumAlu);
+		txtNumAlu.setColumns(10);
+		
+		txtPiso = new JTextField();
+		txtPiso.setBounds(124, 92, 126, 20);
+		getContentPane().add(txtPiso);
+		txtPiso.setColumns(10);
+
+	}
+	
+	public void mensaje(String ms) {
+		JOptionPane.showMessageDialog(this, ms);
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnRegistrar) {
+			actionPerformedBtnRegistrarJButton(e);
+		}
+	}
+	protected void actionPerformedBtnRegistrarJButton(ActionEvent e) {
+		String num = txtNumero.getText();
+		String piso = txtPiso.getText();
+		String numalu = txtNumAlu.getText();
+		String recur = txtRecursos.getText();
+		boolean estado = CheckEstado.isSelected();
+		String sede = cboSede.getSelectedItem().toString();
+		
+		if(!num.matches(Validaciones.TEXTO_NUMERO)) {
+			mensaje("El NÚMERO DE SALA debe ser de 1 a 3 caracteres");
+		}else if(!numalu.matches(Validaciones.ALUMNOS)) {
+			mensaje("El NÚMERO ALUMNOS debe de ser de 2 a 90 caracteres");
+		}else if(!recur.matches(Validaciones.TEXTO)) {
+			mensaje("El RECURSOS es de 2 a 15 caracteres");
+		}else if(cboSede.getSelectedIndex() == 0) {
+			mensaje("Selecione la SEDE");	
+		}else {	
+			Sala obj = new Sala();
+			obj.setNumero(num);
+			obj.setPiso(piso);
+			obj.setNumero(numalu);
+			obj.setRecursos(recur);
+			obj.setEstado(getIntegerEstado(estado));
+			obj.setSede(sede);
+			
+			SalaModel model = new SalaModel();
+			int salida = model.insertaSala(obj);
+			
+			if(salida > 0) {
+				mensaje("Se Registro Correctamente");
+			}else {
+				mensaje("No se logro Registrar");
+			}	
+		}
+	}
+	/*
+	private String getFormatoEstado(int estado) {
+		return estado == 1? "true":"false";
+	}
+	
+	private boolean getBooleanEstado(String estado) {
+		return estado == "Activo"? true:false;
+	}
+	*/
+	private int getIntegerEstado(boolean estado) {
+		return estado? 1:0;
+	}
+}

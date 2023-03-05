@@ -1,0 +1,119 @@
+package gui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JInternalFrame;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import entidad.Libro;
+import model.LibroModel;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.swing.JRViewer;
+import util.GeneradorReporte;
+
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.util.List;
+import java.awt.event.ActionEvent;
+
+public class FrmReporteLibro extends JInternalFrame implements ActionListener {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextField txtTitulo;
+	private JTextField txtCategoria;
+	private JButton btnFiltrar;
+	private JPanel panel;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FrmReporteLibro frame = new FrmReporteLibro();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public FrmReporteLibro() {
+		setTitle("Reporte de Libro");
+		setIconifiable(true);
+		setMaximizable(true);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setClosable(true);
+		setBounds(100, 100, 1050, 705);
+		getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("REPORTE");
+		lblNewLabel.setBounds(434, 11, 68, 33);
+		getContentPane().add(lblNewLabel);
+		
+		panel = new JPanel();
+		panel.setBounds(10, 102, 1014, 562);
+		getContentPane().add(panel);
+		
+		txtTitulo = new JTextField();
+		txtTitulo.setBounds(117, 59, 86, 20);
+		getContentPane().add(txtTitulo);
+		txtTitulo.setColumns(10);
+		
+		txtCategoria = new JTextField();
+		txtCategoria.setBounds(416, 59, 86, 20);
+		getContentPane().add(txtCategoria);
+		txtCategoria.setColumns(10);
+		
+		JLabel lblNewLabel_1 = new JLabel("New label");
+		lblNewLabel_1.setBounds(10, 62, 46, 14);
+		getContentPane().add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("New label");
+		lblNewLabel_2.setBounds(275, 62, 46, 14);
+		getContentPane().add(lblNewLabel_2);
+		
+		btnFiltrar = new JButton("New button");
+		btnFiltrar.addActionListener(this);
+		btnFiltrar.setBounds(607, 58, 89, 23);
+		getContentPane().add(btnFiltrar);
+
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnFiltrar) {
+			actionPerformedBtnFiltrarJButton(e);
+		}
+	}
+	protected void actionPerformedBtnFiltrarJButton(ActionEvent e) {
+		String titulo = txtTitulo.getText();
+		String categoria = txtCategoria.getText();
+		
+		LibroModel model = new LibroModel();
+		List<Libro> lstLibro = model.ConsultaPorTituloCategoria(titulo, categoria);
+		
+		JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(lstLibro);
+		String jasper = "Cherry.jasper";	
+		
+		JasperPrint print = GeneradorReporte.genera(jasper, dataSource, null);
+		
+		JRViewer JRViewer = new JRViewer(print);
+		
+		panel.removeAll();
+		panel.add(JRViewer);
+		panel.repaint();
+		panel.revalidate();
+	}
+}

@@ -1,0 +1,74 @@
+package gui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JInternalFrame;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import java.awt.Font;
+import javax.swing.JTextField;
+
+public class FrmReporteProveedor extends JInternalFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextField txtNombres;
+	private JTextField txtApellidos;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FrmReporteProveedor frame = new FrmReporteProveedor();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public FrmReporteProveedor() {
+		setTitle("Reporte de Proveedor");
+		setMaximizable(true);
+		setIconifiable(true);
+		setClosable(true);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setBounds(100, 100, 1050, 705);
+		getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Reporte de Proveedor");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 27));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(320, 26, 322, 46);
+		getContentPane().add(lblNewLabel);
+		
+		txtNombres = new JTextField();
+		txtNombres.setBounds(158, 90, 147, 20);
+		getContentPane().add(txtNombres);
+		txtNombres.setColumns(10);
+		
+		JLabel lblNewLabel_1 = new JLabel("Nombres:");
+		lblNewLabel_1.setBounds(53, 93, 73, 14);
+		getContentPane().add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Apellidos:");
+		lblNewLabel_2.setBounds(352, 93, 79, 14);
+		getContentPane().add(lblNewLabel_2);
+		
+		txtApellidos = new JTextField();
+		txtApellidos.setBounds(453, 90, 159, 20);
+		getContentPane().add(txtApellidos);
+		txtApellidos.setColumns(10);
+
+	}
+}

@@ -1,0 +1,219 @@
+package gui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JInternalFrame;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Font;
+import javax.swing.SwingConstants;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+
+import entidad.Usuario;
+import model.UsuarioModel;
+import util.Conversiones;
+import validacion.Validador;
+
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class FrmRegistroUsuario extends JInternalFrame implements ActionListener {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextField txtDireccion;
+	private JTextField txtCorreo;
+	private JTextField txtNombres;
+	private JTextField txtApellidos;
+	private JTextField txtDNI;
+	private JTextField txtLogin;
+	private JTextField txtPassword;
+	private JComboBox<String> cboPais;
+	private JTextField txtFec_nac;
+	private JButton btnRegistrar;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FrmRegistroUsuario frame = new FrmRegistroUsuario();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public FrmRegistroUsuario() {
+		setMaximizable(true);
+		setIconifiable(true);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setClosable(true);
+		setTitle("Registro de Usuario");
+		setBounds(100, 100, 455, 398);
+		getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Registro de Usuario");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel.setBounds(54, 11, 276, 36);
+		getContentPane().add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("Nombres:");
+		lblNewLabel_1.setBounds(10, 65, 63, 14);
+		getContentPane().add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Apellidos:");
+		lblNewLabel_2.setBounds(10, 96, 63, 14);
+		getContentPane().add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("DNI:");
+		lblNewLabel_3.setBounds(10, 124, 63, 14);
+		getContentPane().add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("Login:");
+		lblNewLabel_4.setBounds(10, 295, 63, 14);
+		getContentPane().add(lblNewLabel_4);
+		
+		JLabel lblNewLabel_5 = new JLabel("Password:");
+		lblNewLabel_5.setBounds(10, 323, 74, 14);
+		getContentPane().add(lblNewLabel_5);
+		
+		JLabel lblNewLabel_1_1 = new JLabel("Correo:");
+		lblNewLabel_1_1.setBounds(10, 160, 74, 14);
+		getContentPane().add(lblNewLabel_1_1);
+		
+		JLabel lblNewLabel_2_1 = new JLabel("Direccion:");
+		lblNewLabel_2_1.setBounds(10, 188, 74, 14);
+		getContentPane().add(lblNewLabel_2_1);
+		
+		JLabel lblNewLabel_3_1 = new JLabel("Pais:");
+		lblNewLabel_3_1.setBounds(10, 217, 74, 14);
+		getContentPane().add(lblNewLabel_3_1);
+		
+		JLabel lblNewLabel_5_1 = new JLabel("Fecha de Nacimiento:");
+		lblNewLabel_5_1.setBounds(10, 249, 127, 14);
+		getContentPane().add(lblNewLabel_5_1);
+		
+		btnRegistrar = new JButton("Registrar");
+		btnRegistrar.addActionListener(this);
+		btnRegistrar.setBounds(323, 156, 89, 23);
+		getContentPane().add(btnRegistrar);
+		
+		cboPais = new JComboBox<String>();
+		cboPais.setModel(new DefaultComboBoxModel<String>(new String[] {"[Seleccione]", "Peru", "Colombia", "Venezuela", "Brazil", "Ecuador", "Chile", "Argentina", "Bolivia"}));
+		cboPais.setBounds(134, 213, 154, 22);
+		getContentPane().add(cboPais);
+		
+		txtDireccion = new JTextField();
+		txtDireccion.setBounds(100, 185, 188, 20);
+		getContentPane().add(txtDireccion);
+		txtDireccion.setColumns(10);
+		
+		txtCorreo = new JTextField();
+		txtCorreo.setText("");
+		txtCorreo.setBounds(100, 157, 188, 20);
+		getContentPane().add(txtCorreo);
+		txtCorreo.setColumns(10);
+		
+		txtNombres = new JTextField();
+		txtNombres.setText("");
+		txtNombres.setBounds(98, 62, 190, 20);
+		getContentPane().add(txtNombres);
+		txtNombres.setColumns(10);
+		
+		txtApellidos = new JTextField();
+		txtApellidos.setBounds(98, 93, 190, 20);
+		getContentPane().add(txtApellidos);
+		txtApellidos.setColumns(10);
+		
+		txtDNI = new JTextField();
+		txtDNI.setBounds(134, 121, 154, 20);
+		getContentPane().add(txtDNI);
+		txtDNI.setColumns(10);
+		
+		txtLogin = new JTextField();
+		txtLogin.setBounds(98, 292, 127, 20);
+		getContentPane().add(txtLogin);
+		txtLogin.setColumns(10);
+		
+		txtPassword = new JTextField();
+		txtPassword.setBounds(98, 320, 127, 20);
+		getContentPane().add(txtPassword);
+		txtPassword.setColumns(10);
+		
+		txtFec_nac = new JTextField();
+		txtFec_nac.setBounds(134, 246, 154, 20);
+		getContentPane().add(txtFec_nac);
+		txtFec_nac.setColumns(10);
+
+	}
+	
+	public void mensaje(String ms) {
+		JOptionPane.showMessageDialog(this, ms);
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnRegistrar) {
+			actionPerformedBtnRegistrarJButton(e);
+		}
+	}
+	protected void actionPerformedBtnRegistrarJButton(ActionEvent e) {
+		String nom = txtNombres.getText();
+		String apel = txtApellidos.getText();
+		String dni = txtDNI.getText();
+		String login = txtLogin.getText();
+		String pass = txtPassword.getText();
+		String correo = txtCorreo.getText();
+		String fecNac = txtFec_nac.getText();
+		String direc = txtDireccion.getText();
+		String pais = cboPais.getSelectedItem().toString();
+		
+		if (!nom.matches(Validador.NOMBRE)) {
+			mensaje("El nombre es de 3 a 30 caracteres");
+		}else if (!apel.matches(Validador.APELLIDO)) {
+			mensaje("El Apellido es de 3 a 30 caracteres");
+		}else if (!dni.matches(Validador.DNI)) {
+			mensaje("Debe contener 8 digitos");
+		}else if(!fecNac.matches(Validador.FECHANAC)) {
+			mensaje("La fecha de nacimiento debe contener este formato: 2022-12-31");
+		}else {
+			Usuario obj = new Usuario();
+			obj.setNombres(nom);
+			obj.setApellidos(apel);
+			obj.setDni(dni);
+			obj.setLogin(login);
+			obj.setPassword(pass);
+			obj.setCorreo(correo);
+			obj.setFec_nac(Conversiones.toFecha(fecNac));
+			obj.setDireccion(direc);
+			obj.setPais(pais);
+			
+			UsuarioModel model = new UsuarioModel();
+			int salida = model.insertaUsuario(obj);
+			
+			if (salida > 0) {
+				mensaje("Se inserto correctamente");
+			}else {
+				mensaje("Error en el registro");
+			}
+			
+		}
+	}
+
+
+}

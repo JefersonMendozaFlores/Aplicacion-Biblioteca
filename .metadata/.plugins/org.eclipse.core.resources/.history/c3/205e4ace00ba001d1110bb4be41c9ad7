@@ -1,0 +1,76 @@
+package entidad;
+
+import java.sql.Date;
+
+public class Alumno {
+	
+	//
+	private int ID;
+	private Date Fec_Nac,Fec_Reg;
+	private String Nombres,Apellidos,DNI,Pais,Correo;
+
+	//
+	public int getID() {
+		return ID;
+	}
+
+	public void setID(int iD) {
+		ID = iD;
+	}
+
+	public Date getFec_Nac() {
+		return Fec_Nac;
+	}
+
+	public void setFec_Nac(Date fec_Nac) {
+		Fec_Nac = fec_Nac;
+	}
+
+	public Date getFec_Reg() {
+		return Fec_Reg;
+	}
+
+	public void setFec_Reg(Date fec_Reg) {
+		Fec_Reg = fec_Reg;
+	}
+
+	public String getNombres() {
+		return Nombres;
+	}
+
+	public void setNombres(String nombres) {
+		Nombres = nombres;
+	}
+
+	public String getApellidos() {
+		return Apellidos;
+	}
+
+	public void setApellidos(String apellidos) {
+		Apellidos = apellidos;
+	}
+
+	public String getDNI() {
+		return DNI;
+	}
+
+	public void setDNI(String dNI) {
+		DNI = dNI;
+	}
+
+	public String getPais() {
+		return Pais;
+	}
+
+	public void setPais(String pais) {
+		Pais = pais;
+	}
+
+	public String getCorreo() {
+		return Correo;
+	}
+
+	public void setCorreo(String correo) {
+		Correo = correo;
+	}
+}

@@ -1,0 +1,177 @@
+package gui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JInternalFrame;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+
+import entidad.Alumno;
+import model.AlumnoModel;
+import util.Conversiones;
+import validacion.Validador;
+
+import java.awt.Font;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class FrmRegistroAlumno extends JInternalFrame implements ActionListener {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextField txtNombres;
+	private JTextField txtCorreo;
+	private JTextField txtApellidos;
+	private JTextField txtDNI;
+	private JComboBox<String> cboPais;
+	private JButton btnRegistrar;
+	private JTextField txtFec_nac;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FrmRegistroAlumno frame = new FrmRegistroAlumno();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public FrmRegistroAlumno() {
+		setTitle("Registro de Alumno");
+		setMaximizable(true);
+		setIconifiable(true);
+		setClosable(true);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setBounds(100, 100, 517, 374);
+		getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Registro de Alumno");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(109, 11, 304, 32);
+		getContentPane().add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("Nombres:");
+		lblNewLabel_1.setBounds(10, 61, 76, 14);
+		getContentPane().add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Apellidos:");
+		lblNewLabel_2.setBounds(10, 100, 76, 14);
+		getContentPane().add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("DNI:");
+		lblNewLabel_3.setBounds(10, 143, 94, 14);
+		getContentPane().add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("Pais:");
+		lblNewLabel_4.setBounds(10, 223, 46, 14);
+		getContentPane().add(lblNewLabel_4);
+		
+		JLabel lblNewLabel_5 = new JLabel("Correo");
+		lblNewLabel_5.setBounds(10, 184, 46, 14);
+		getContentPane().add(lblNewLabel_5);
+		
+		JLabel lblNewLabel_6 = new JLabel("Fecha de Nacimiento:");
+		lblNewLabel_6.setBounds(10, 270, 130, 14);
+		getContentPane().add(lblNewLabel_6);
+		
+		txtNombres = new JTextField();
+		txtNombres.setBounds(96, 58, 228, 20);
+		getContentPane().add(txtNombres);
+		txtNombres.setColumns(10);
+		
+		txtCorreo = new JTextField();
+		txtCorreo.setBounds(96, 181, 228, 20);
+		getContentPane().add(txtCorreo);
+		txtCorreo.setColumns(10);
+		
+		txtApellidos = new JTextField();
+		txtApellidos.setBounds(96, 97, 228, 20);
+		getContentPane().add(txtApellidos);
+		txtApellidos.setColumns(10);
+		
+		cboPais = new JComboBox<String>();
+		cboPais.setModel(new DefaultComboBoxModel <String>(new String[] { "[Seleccione]", "Peru", "Colombia", "Venezuela", "Brazil", "Ecuador", "Chile", "Argentina", "Bolivia"}));
+		cboPais.setBounds(96, 219, 228, 22);
+		getContentPane().add(cboPais);
+		
+		txtDNI = new JTextField();
+		txtDNI.setBounds(96, 140, 228, 20);
+		getContentPane().add(txtDNI);
+		txtDNI.setColumns(10);
+		
+		btnRegistrar = new JButton("Registrar");
+		btnRegistrar.addActionListener(this);
+		btnRegistrar.setBounds(385, 139, 89, 23);
+		getContentPane().add(btnRegistrar);
+		
+		txtFec_nac = new JTextField();
+		txtFec_nac.setBounds(142, 267, 182, 20);
+		getContentPane().add(txtFec_nac);
+		txtFec_nac.setColumns(10);
+
+	}
+	
+	public void mensaje(String ms) {
+		JOptionPane.showMessageDialog(this, ms);
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnRegistrar) {
+			actionPerformedBtnRegistrarJButton(e);
+		}
+	}
+	protected void actionPerformedBtnRegistrarJButton(ActionEvent e) {
+		String nom = txtNombres.getText();
+		String apel = txtApellidos.getText();
+		String dni = txtDNI.getText();
+		String paises = cboPais.getSelectedItem().toString();
+		String correo = txtCorreo.getText();
+		String fec = txtFec_nac.getText();
+		
+		if (!nom.matches(Validador.NOMBRE)) {
+			mensaje("El nombre es 3 a mas caracteres");
+		}else if(!apel.matches(Validador.APELLIDO)){
+			mensaje("El nombre es 3 a mas caracteres");
+		} else if (!fec.matches(Validador.FECHANAC)) {
+			mensaje("La fecha es YYYY-MM-DD /Un ejemplo podria ser: 2000-12-31");
+		}else {
+			 
+			Alumno obj = new Alumno();
+			obj.setNombres(nom);
+			obj.setApellidos(apel);
+			obj.setDNI(dni);
+			obj.setPais(paises);
+			obj.setCorreo(correo);
+			obj.setFec_Nac(Conversiones.toFecha(fec));
+			
+			AlumnoModel model = new AlumnoModel();
+			int salida = model.insertaAlumno(obj);
+			
+			if (salida > 0) {
+				mensaje("Se registro correctamente. Felicitaciones :)");
+			}else {
+				mensaje("No se registro correctamente :(");
+			}
+			
+		}
+	}
+}

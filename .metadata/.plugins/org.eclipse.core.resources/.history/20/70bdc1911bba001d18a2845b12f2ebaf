@@ -1,0 +1,166 @@
+package gui;
+
+import java.awt.EventQueue;
+
+import validacion.Validador;
+import javax.swing.JInternalFrame;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Font;
+import javax.swing.SwingConstants;
+import javax.swing.JTextField;
+
+import entidad.Autor;
+import model.AutorModel;
+import util.Conversiones;
+
+import javax.swing.JComboBox;
+import javax.swing.JButton;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class FrmRegistroAutor extends JInternalFrame implements ActionListener {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextField txtNombres;
+	private JTextField txtApellidos;
+	private JComboBox<String> cboPais;
+	private JComboBox<String> cboGrado;
+	private JButton btnRegistrar;
+	private JTextField txtFec_nac;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FrmRegistroAutor frame = new FrmRegistroAutor();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public FrmRegistroAutor() {
+		setTitle("Registro de Autor");
+		setMaximizable(true);
+		setIconifiable(true);
+		setClosable(true);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setBounds(100, 100, 452, 323);
+		getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Registro de Autor");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel.setBounds(110, 11, 248, 32);
+		getContentPane().add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("Nombres:");
+		lblNewLabel_1.setBounds(10, 57, 68, 14);
+		getContentPane().add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Apellidos:");
+		lblNewLabel_2.setBounds(10, 99, 68, 14);
+		getContentPane().add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("Fecha de Nacimiento:");
+		lblNewLabel_3.setBounds(10, 225, 124, 14);
+		getContentPane().add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("Grado:");
+		lblNewLabel_4.setBounds(10, 142, 65, 14);
+		getContentPane().add(lblNewLabel_4);
+		
+		JLabel lblNewLabel_5 = new JLabel("Pais:");
+		lblNewLabel_5.setBounds(10, 184, 65, 14);
+		getContentPane().add(lblNewLabel_5);
+		
+		txtNombres = new JTextField();
+		txtNombres.setBounds(88, 54, 193, 20);
+		getContentPane().add(txtNombres);
+		txtNombres.setColumns(10);
+		
+		txtApellidos = new JTextField();
+		txtApellidos.setBounds(88, 96, 193, 20);
+		getContentPane().add(txtApellidos);
+		txtApellidos.setColumns(10);
+		
+		cboGrado = new JComboBox<String>();
+		cboGrado.setModel(new DefaultComboBoxModel <String>(new String[] {"[Seleccione]", "Autor", "Licenciado", "Dcotorado", "Superior"}));
+		cboGrado.setBounds(85, 138, 196, 22);
+		getContentPane().add(cboGrado);
+		
+		cboPais = new JComboBox<String>();
+		cboPais.setModel(new DefaultComboBoxModel <String>(new String[] {"[Seleccione]", "Peru", "Colombia", "Venezuela", "Brazil", "Ecuador", "Chile", "Argentina", "Bolivia"}));
+		cboPais.setBounds(85, 180, 196, 22);
+		getContentPane().add(cboPais);
+		
+		btnRegistrar = new JButton("Registrar");
+		btnRegistrar.addActionListener(this);
+		btnRegistrar.setBounds(323, 139, 89, 20);
+		getContentPane().add(btnRegistrar);
+		
+		txtFec_nac = new JTextField();
+		txtFec_nac.setBounds(144, 222, 140, 20);
+		getContentPane().add(txtFec_nac);
+		txtFec_nac.setColumns(10);
+
+	}
+	
+	public void mensaje(String ms) {
+		JOptionPane.showMessageDialog(this, ms);
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnRegistrar) {
+			actionPerformedBtnRegistrarJButton(e);
+		}
+	}
+	protected void actionPerformedBtnRegistrarJButton(ActionEvent e) {
+		String nom = txtNombres.getText();
+		String apel = txtApellidos.getText();
+		String fec = txtFec_nac.getText();
+		String paises = cboPais.getSelectedItem().toString();
+		String grad = cboGrado.getSelectedItem().toString();
+		
+		if (!nom.matches(Validador.NOMBRE)) {
+			mensaje("El nombre es 3 a mas caracteres");
+		}else if(!apel.matches(Validador.APELLIDO)){
+			mensaje("El nombre es 3 a mas caracteres");
+		} else if (!fec.matches(Validador.FECHANAC)) {
+			mensaje("La fecha es YYYY-MM-DD /Un ejemplo podria ser: 2000-12-31");
+		}else {
+			 
+			Autor obj = new Autor();
+			obj.setNombres(nom);
+			obj.setApellidos(apel);
+			obj.setFec_nac(Conversiones.toFecha(fec));
+			obj.setPais(paises);
+			obj.setGrado(grad);
+			
+			AutorModel model = new AutorModel();
+			int salida = model.insertaAutor(obj);
+			
+			if (salida > 0) {
+				mensaje("Se registro correctamente. Felicitaciones :)");
+			}else {
+				mensaje("No se registro correctamente :(");
+			}
+			
+		}
+	}
+}
